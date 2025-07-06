@@ -10,6 +10,13 @@
 
 > API de autenticação com JWT, Express e Supabase
 
+## Preview
+<!-- 
+![Auth API Preview](./image/image.png) -->
+<p align="center">
+  <img src="./image/image.png" alt="Auth API Preview" width="400"/>
+</p>
+
 ## Install
 
 ```sh

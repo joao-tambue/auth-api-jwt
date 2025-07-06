@@ -6,6 +6,44 @@ import authMiddleware from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Endpoints de autenticação
+ */
+
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Registra um novo usuário
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - name
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Usuário registrado com sucesso
+ *       400:
+ *         description: Dados inválidos ou usuário já existe
+ *       500:
+ *         description: Erro interno no servidor
+ */
 router.post('/register', async (req, res) => {
   try {
     const { email, password, name } = req.body || {};
@@ -39,7 +77,43 @@ router.post('/register', async (req, res) => {
   }
 });
 
-
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Faz login do usuário e retorna o token JWT
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login bem-sucedido, retorna token JWT
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Email ou senha ausentes
+ *       401:
+ *         description: Senha inválida
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.post('/login', async (req, res) => {
   const { email, password } = req.body || {};
 
@@ -67,7 +141,33 @@ router.post('/login', async (req, res) => {
   res.json({ token });
 });
 
-// PROTEGIDA
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Retorna os dados do usuário autenticado
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Dados do usuário autenticado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *       401:
+ *         description: Token inválido ou ausente
+ *       404:
+ *         description: Usuário não encontrado
+ */
 router.get('/me', authMiddleware, async (req, res) => {
   const userId = req.user.id;
 
