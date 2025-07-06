@@ -1,0 +1,8 @@
+{
+  "projectName": "Auth-api",
+  "projectDescription": "Uma api de autenticação feita com node.js, express e supabase",
+  "authorName": "João [Tambue",
+  "authorEmail": "joaotambue13@email.com",
+  "authorGithubUsername": "joao-tambue",
+  "license": "MIT"
+}

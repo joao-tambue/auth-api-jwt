@@ -1,0 +1,22 @@
+{
+  "name": "auth-api",
+  "version": "1.0.0",
+  "description": "API de autenticação com JWT, Express e Supabase",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "keywords": [],
+  "author": "João",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.5",
+    "axios": "^1.10.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
