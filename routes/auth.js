@@ -7,31 +7,45 @@ import authMiddleware from '../middlewares/authMiddleware.js';
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-  const { email, password, name } = req.body;
+  try {
+    const { email, password, name } = req.body || {};
 
-  const { data: existingUser } = await supabase
-    .from('users')
-    .select('*')
-    .eq('email', email)
-    .single();
+    if (!email || !password || !name) {
+      return res.status(400).json({ error: 'Todos os campos são obrigatórios' });
+    }
 
-  if (existingUser) {
-    return res.status(400).json({ error: 'Usuário já existe' });
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Usuário já existe' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const { error } = await supabase
+      .from('users')
+      .insert([{ email, password: hashedPassword, name }]);
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    res.status(201).json({ message: 'Usuário registrado com sucesso' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erro interno no servidor' });
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const { data, error } = await supabase
-    .from('users')
-    .insert([{ email, password: hashedPassword, name }]);
-
-  if (error) return res.status(500).json({ error: error.message });
-
-  res.status(201).json({ message: 'Usuário registrado com sucesso' });
 });
 
+
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body || {};
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+  }
 
   const { data: user } = await supabase
     .from('users')
